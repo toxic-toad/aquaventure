@@ -1,7 +1,8 @@
+
 'use client';
 
 import Link from 'next/link';
-import { ShoppingBag, Home, Cpu, List } from 'lucide-react';
+import { ShoppingBag, Home, User, List } from 'lucide-react'; // Changed Cpu to User
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 
@@ -20,13 +21,13 @@ export function Header() {
         </Link>
         <nav className="space-x-2 md:space-x-4 flex items-center">
           <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">
-            <Link href="/" className="flex items-center gap-1">
-              <Home size={18} /> <span className="hidden sm:inline">Home</span>
+            <Link href="/auth" className="flex items-center gap-1">
+              <User size={18} /> <span className="hidden sm:inline">Login</span>
             </Link>
           </Button>
           <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">
-            <Link href="/ai-suggestions" className="flex items-center gap-1">
-              <Cpu size={18} /> <span className="hidden sm:inline">AI Suggestions</span>
+            <Link href="/" className="flex items-center gap-1">
+              <Home size={18} /> <span className="hidden sm:inline">Home</span>
             </Link>
           </Button>
           <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">

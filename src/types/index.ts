@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -30,7 +31,4 @@ export interface Order {
   createdAt: string; // ISO date string
 }
 
-export interface AIProductSuggestion {
-  productName: string;
-  description: string;
-}
+// AIProductSuggestion type removed as the feature is no longer present.
