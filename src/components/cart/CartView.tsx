@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useCart } from '@/context/CartContext';
@@ -6,17 +7,33 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
-import { Trash2, Minus, Plus, ShoppingCart, ArrowRight } from 'lucide-react';
+import { Trash2, Minus, Plus, ShoppingCart, ArrowRight, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
 
 export function CartView() {
   const { state, removeFromCart, updateQuantity, getTotalPrice, getTotalItems } = useCart();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
-    if (newQuantity >= 0) { // Allow 0 to remove via input, though UI prefers buttons
+    if (newQuantity >= 0) { 
       updateQuantity(productId, newQuantity);
     }
   };
+
+  if (!isClient) {
+    // Render a loading state or placeholder during server-side rendering and initial client-side render before hydration
+    return (
+      <div className="flex justify-center items-center py-20">
+        <Loader2 size={48} className="animate-spin text-primary" />
+        <p className="ml-4 text-lg text-muted-foreground">Loading cart...</p>
+      </div>
+    );
+  }
 
   if (state.items.length === 0) {
     return (

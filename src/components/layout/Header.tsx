@@ -5,9 +5,16 @@ import Link from 'next/link';
 import { ShoppingBag, Home, User, List } from 'lucide-react'; // Changed Cpu to User
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
 
 export function Header() {
   const { getTotalItems } = useCart();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const totalItems = getTotalItems();
 
   return (
@@ -33,7 +40,7 @@ export function Header() {
           <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">
             <Link href="/cart" className="relative flex items-center gap-1">
               <ShoppingBag size={18} /> <span className="hidden sm:inline">Cart</span>
-              {totalItems > 0 && (
+              {isClient && totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {totalItems}
                 </span>
