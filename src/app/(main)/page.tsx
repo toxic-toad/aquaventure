@@ -6,7 +6,7 @@ import { ProductGrid } from '@/components/products/ProductGrid';
 import { CategoryCard } from '@/components/categories/CategoryCard';
 import { mockProducts } from '@/data/products';
 import type { Product } from '@/types';
-import { ArrowRight, Fish, Sparkles } from 'lucide-react';
+import { ArrowRight, Fish, Mail } from 'lucide-react'; // Changed Sparkles to Mail
 import type { Metadata } from 'next';
 
 // This function would typically fetch data from a database or API
@@ -109,17 +109,17 @@ export default async function HomePage() {
         </section>
       )}
       
-      {/* AI Suggester Callout */}
+      {/* Contact Us Callout */}
       <section className="container mx-auto px-4">
         <div className="bg-secondary/50 p-8 md:p-12 rounded-lg shadow-md text-center">
-          <Sparkles className="mx-auto h-12 w-12 mb-4 text-accent" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-primary">Need Help Choosing?</h2>
+          <Mail className="mx-auto h-12 w-12 mb-4 text-accent" /> {/* Changed icon */}
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-primary">Have Questions? Contact Us!</h2>
           <p className="text-foreground/80 mb-8 max-w-xl mx-auto text-lg">
-            Try our AI Product Suggester! Get personalized recommendations based on your aquarium size.
+            Our team is here to help you with any inquiries about our products, your orders, or aquarium advice.
           </p>
           <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Link href="/ai-suggestions">
-              Get AI Suggestions Now
+            <Link href="/contact"> {/* Link to a potential contact page */}
+              Get In Touch
             </Link>
           </Button>
         </div>
