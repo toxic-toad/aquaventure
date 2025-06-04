@@ -1,5 +1,4 @@
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
-import Link from 'next/link'; // Added import
 
 export default function CheckoutPage() {
   return (

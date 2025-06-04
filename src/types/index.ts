@@ -31,4 +31,7 @@ export interface Order {
   createdAt: string; // ISO date string
 }
 
-// AIProductSuggestion type removed as the feature is no longer present.
+export interface AIProductSuggestion {
+  productName: string;
+  description: string;
+}
