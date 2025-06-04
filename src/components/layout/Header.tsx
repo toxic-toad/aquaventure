@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingBag, Home, User, List } from 'lucide-react'; // Changed Cpu to User
+import { ShoppingBag, Home, User, List } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -26,18 +26,23 @@ export function Header() {
           </svg>
           AquaVenture
         </Link>
-        <nav className="space-x-2 md:space-x-4 flex items-center">
-          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">
+        <nav className="space-x-1 md:space-x-2 flex items-center">
+          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
             <Link href="/auth" className="flex items-center gap-1">
               <User size={18} /> <span className="hidden sm:inline">Login</span>
             </Link>
           </Button>
-          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">
+          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
             <Link href="/" className="flex items-center gap-1">
               <Home size={18} /> <span className="hidden sm:inline">Home</span>
             </Link>
           </Button>
-          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80">
+          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
+            <Link href="/categories" className="flex items-center gap-1">
+              <List size={18} /> <span className="hidden sm:inline">Categories</span>
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
             <Link href="/cart" className="relative flex items-center gap-1">
               <ShoppingBag size={18} /> <span className="hidden sm:inline">Cart</span>
               {isClient && totalItems > 0 && (
