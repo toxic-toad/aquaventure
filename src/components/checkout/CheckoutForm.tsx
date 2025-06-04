@@ -2,6 +2,7 @@
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import * as z from 'zod';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
