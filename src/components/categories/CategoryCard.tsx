@@ -4,7 +4,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight } from 'lucide-react';
+// ArrowRight is no longer needed
+// import { ArrowRight } from 'lucide-react'; 
 
 interface CategoryCardProps {
   categoryName: string;
@@ -19,7 +20,7 @@ export function CategoryCard({ categoryName, productCount }: CategoryCardProps) 
 
   return (
     <Link href={`/products/category/${encodeURIComponent(categoryName.toLowerCase())}`} passHref>
-      <Card className="flex flex-col overflow-hidden h-full shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg group">
+      <Card className="flex flex-col overflow-hidden h-full shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg group cursor-pointer">
         <CardHeader className="p-0">
           <div className="aspect-video relative w-full">
             <Image
@@ -32,14 +33,13 @@ export function CategoryCard({ categoryName, productCount }: CategoryCardProps) 
             />
           </div>
         </CardHeader>
-        <CardContent className="p-4 flex-grow flex flex-col justify-between">
+        <CardContent className="p-4 flex-grow">
           <div>
             <CardTitle className="text-xl font-semibold mb-1 group-hover:text-primary transition-colors">{categoryName}</CardTitle>
             <p className="text-sm text-muted-foreground">{productCount} product{productCount !== 1 ? 's' : ''}</p>
           </div>
-          <div className="mt-4 flex items-center text-sm text-accent group-hover:underline">
-            View Products <ArrowRight size={16} className="ml-1 transition-transform group-hover:translate-x-1" />
-          </div>
+          {/* The explicit "View Products" link with ArrowRight has been removed. 
+              The entire card is a link, and hover effects (shadow, title color) indicate interactivity. */}
         </CardContent>
       </Card>
     </Link>
