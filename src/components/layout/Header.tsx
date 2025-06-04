@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingBag, Home, User, List } from 'lucide-react';
+import { ShoppingBag, Home, List } from 'lucide-react'; // Removed User icon
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
@@ -27,11 +27,7 @@ export function Header() {
           AquaVenture
         </Link>
         <nav className="space-x-1 md:space-x-2 flex items-center">
-          <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
-            <Link href="/auth" className="flex items-center gap-1">
-              <User size={18} /> <span className="hidden sm:inline">Login</span>
-            </Link>
-          </Button>
+          {/* Removed Login Button */}
           <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
             <Link href="/" className="flex items-center gap-1">
               <Home size={18} /> <span className="hidden sm:inline">Home</span>
