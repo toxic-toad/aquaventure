@@ -107,7 +107,8 @@ export default function OrderConfirmationPage() {
   );
 }
 
-export const metadata = {
-  title: 'Order Confirmation | AquaVenture',
-  description: 'Your AquaVenture order has been confirmed.',
-};
+// Removed metadata export as this is a Client Component
+// export const metadata = {
+//   title: 'Order Confirmation | AquaVenture',
+//   description: 'Your AquaVenture order has been confirmed.',
+// };
