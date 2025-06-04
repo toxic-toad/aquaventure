@@ -11,7 +11,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogIn, UserPlus, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase'; // Import Firebase auth
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, AuthError } from 'firebase/auth';
 import { useToast } from "@/components/ui/use-toast"; // Import useToast
@@ -23,10 +22,9 @@ const loginSchema = z.object({
 });
 type LoginFormData = z.infer<typeof loginSchema>;
 
-// Signup Schema
+// Signup Schema - Removed name and confirmPassword for simplicity as requested
 const signupSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."), // Name is not directly used by Firebase auth but good for your DB
-  email: z.string().email("Invalid email address."),
+ email: z.string().email("Invalid email address."),
   password: z.string().min(6, "Password must be at least 6 characters."),
   confirmPassword: z.string().min(6, "Password must be at least 6 characters."),
 }).refine(data => data.password === data.confirmPassword, {
@@ -36,7 +34,6 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 export function AuthForm() {
-  const router = useRouter();
   const { toast } = useToast();
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [isSignupLoading, setIsSignupLoading] = useState(false);
@@ -48,7 +45,7 @@ export function AuthForm() {
 
   const signupForm = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+ defaultValues: { email: '', password: '', confirmPassword: '' },
   });
 
   const handleAuthError = (error: AuthError) => {
@@ -78,7 +75,7 @@ export function AuthForm() {
     });
   };
 
-  const onLoginSubmit: SubmitHandler<LoginFormData> = async (data) => {
+  const onLoginSubmit: SubmitHandler<LoginFormData> = async (data) => { 
     setIsLoginLoading(true);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
@@ -86,7 +83,6 @@ export function AuthForm() {
         title: "Login Successful",
         description: "Welcome back!",
       });
-      router.push('/'); // Redirect to homepage on successful login
       loginForm.reset();
     } catch (error) {
       handleAuthError(error as AuthError);
@@ -99,12 +95,10 @@ export function AuthForm() {
     setIsSignupLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password);
-      // You might want to save the user's name (data.name) to Firestore here
       toast({
         title: "Signup Successful",
         description: "Welcome! Your account has been created.",
       });
-      router.push('/'); // Redirect to homepage on successful signup
       signupForm.reset();
     } catch (error) {
       handleAuthError(error as AuthError);
@@ -181,19 +175,6 @@ export function AuthForm() {
             </CardDescription>
             <Form {...signupForm}>
               <form onSubmit={signupForm.handleSubmit(onSignupSubmit)} className="space-y-5">
-                <FormField
-                  control={signupForm.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} disabled={isSignupLoading} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={signupForm.control}
                   name="email"
