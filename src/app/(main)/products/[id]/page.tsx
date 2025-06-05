@@ -1,7 +1,6 @@
 import { mockProducts } from '@/data/products';
 import type { Product } from '@/types';
 import { ProductDetailsClient } from '@/components/products/ProductDetailsClient';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
