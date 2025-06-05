@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'; // Assuming zod and react
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { User } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // Import Card components
 
 // Define a schema for your form data
 const profileFormSchema = z.object({
@@ -63,9 +64,9 @@ export default function ProfilePage() {
     // Call the updateProfile function from context
     updateProfile({
       username: values.username,
-      email: values.email || null, // Ensure null if empty string
-      phoneNumber: values.phoneNumber || null, // Ensure null if empty string
-      userImageUrl: values.userImageUrl || null, // Ensure null if empty string
+      email: values.email || undefined,
+      phoneNumber: values.phoneNumber || undefined,
+      userImageUrl: values.userImageUrl || undefined,
     });
     setIsEditing(false); // Exit editing mode after saving
   }
@@ -80,36 +81,38 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="text-3xl font-bold mb-6 text-primary-foreground">User Profile</h1>
-
-      <div className="flex flex-col items-center mb-6">
-        {userImageUrl ? (
-          <img src={userImageUrl} alt={`${username}'s profile`} className="w-32 h-32 rounded-full object-cover mb-4" />
-        ) : (
-          <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mb-4">
-            <User size={64} />
+      <Card> {/* Wrap content in Card */}
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">User Profile</CardTitle> {/* Center the title and adjust size */}
+        </CardHeader>
+        <CardContent> {/* Add CardContent for padding */}
+          <div className="flex flex-col items-center mb-6">
+            {userImageUrl ? (
+              <img src={userImageUrl} alt={`${username}'s profile`} className="w-32 h-32 rounded-full object-cover mb-4" />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mb-4">
+                <User size={64} />
+              </div>
+            )}
+             {!isEditing && <p className="text-xl font-semibold text-foreground">{username}</p>} {/* Use text-foreground for username */}
           </div>
-        )}
-        {/* Display username outside form when not editing */}
-         {!isEditing && <p className="text-xl font-semibold text-primary-foreground">{username}</p>}
-      </div>
 
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {isEditing ? (
-            <>
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-primary-foreground">Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your username" {...field} className="bg-background text-foreground border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {isEditing ? (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-muted-foreground">Username</FormLabel> {/* Use text-muted-foreground for labels */}
+                        <FormControl>
+                          <Input placeholder="Your username" {...field} className="bg-background text-foreground border-border" />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
                 )}
               />
               <FormField
@@ -117,7 +120,7 @@ export default function ProfilePage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-primary-foreground">Email Address</FormLabel>
+                    <FormLabel className="text-muted-foreground">Email Address</FormLabel> {/* Use text-muted-foreground for labels */}
                     <FormControl>
                       <Input type="email" placeholder="Your email" {...field} className="bg-background text-foreground border-border" />
                     </FormControl>
@@ -130,7 +133,7 @@ export default function ProfilePage() {
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-primary-foreground">Phone Number</FormLabel>
+                    <FormLabel className="text-muted-foreground">Phone Number</FormLabel> {/* Use text-muted-foreground for labels */}
                     <FormControl>
                       <Input type="tel" placeholder="Your phone number" {...field} className="bg-background text-foreground border-border" />
                     </FormControl>
@@ -144,7 +147,7 @@ export default function ProfilePage() {
                 name="userImageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-primary-foreground">Profile Image URL</FormLabel>
+                    <FormLabel className="text-muted-foreground">Profile Image URL</FormLabel>
                     <FormControl>
                       <Input type="url" placeholder="Image URL" {...field} className="bg-background text-foreground border-border" />
                     </FormControl>
@@ -172,18 +175,20 @@ export default function ProfilePage() {
             </>
           ) : (
              // Display user details when not editing
-            <div className="space-y-4 text-primary-foreground">
-                <p><strong>Email:</strong> {email || 'N/A'}</p>
-                <p><strong>Phone Number:</strong> {phoneNumber || 'N/A'}</p>
-                {/* Optional: Display Image URL if available */}
-                {/* {userImageUrl && <p><strong>Image URL:</strong> {userImageUrl}</p>} */}
-                <div className="flex justify-end">
-                     <Button type="button" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+            <div className="space-y-4 text-foreground"> {/* Use text-foreground for values */}
+                    <p><strong className="text-muted-foreground">Email:</strong> {email || 'N/A'}</p> {/* Use text-muted-foreground for keys */}
+                    <p><strong className="text-muted-foreground">Phone Number:</strong> {phoneNumber || 'N/A'}</p> {/* Use text-muted-foreground for keys */}
+                    {/* Optional: Display Image URL if available */}
+                    {/* {userImageUrl && <p><strong>Image URL:</strong> {userImageUrl}</p>} */}
+                    <div className="flex justify-end">
+                         <Button type="button" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+                    </div>
                 </div>
-            </div>
-          )}
-        </form>
-      </Form>
+              )}
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
