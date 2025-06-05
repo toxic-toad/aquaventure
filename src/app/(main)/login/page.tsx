@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 
@@ -10,13 +11,25 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/';
+  const [loginError, setLoginError] = useState('');
+  const { login } = useAuth();
 
-  const handleLogin = (event: React.FormEvent) => {
+  // Clear error message on input change
+  useEffect(() => {
+    if (loginError) {
+      setLoginError('');
+    }
+  }, [username, password]);
+
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (username === 'admin' && password === 'admin') {
-      router.push(redirectUrl);
+      // Use the login function from AuthContext
+      login('Admin User');
+      router.push(redirectUrl); // Redirect after successful login
     } else {
+      setLoginError('Invalid username or password.');
       // Handle invalid credentials - e.g., show an error message to the user
     }
   };
@@ -30,6 +43,7 @@ const LoginPage: React.FC = () => {
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username:</label>
             <input
               type="text"
+              autoComplete="username"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -37,15 +51,17 @@ const LoginPage: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="password erection" className="block text-sm font-medium text-gray-700">Password:</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
             <input
               type="password"
+              autoComplete="current-password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
             />
           </div>
+          {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
           <Button type="submit" className="w-full">Login</Button>
         </form>
       </div>
