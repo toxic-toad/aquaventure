@@ -1,11 +1,12 @@
 
 'use client';
 
-import Link from 'next/link';
-import { ShoppingBag, Home, List } from 'lucide-react'; // Removed User icon
+import Link from 'next/link'; // User icon added back
+import { ShoppingBag, Home, List, User } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export function Header() {
   const { getTotalItems } = useCart();
@@ -16,6 +17,9 @@ export function Header() {
   }, []);
 
   const totalItems = getTotalItems();
+  const isLoggedIn = false; // Placeholder: Replace with actual login status check
+  const userImage = null; // Placeholder: Replace with actual user image URL if available
+  const username = "Admin User"; // Placeholder: Replace with actual logged in username
 
   return (
     <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-50">
@@ -27,7 +31,6 @@ export function Header() {
           AquaVenture
         </Link>
         <nav className="space-x-1 md:space-x-2 flex items-center">
-          {/* Removed Login Button */}
           <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3">
             <Link href="/" className="flex items-center gap-1">
               <Home size={18} /> <span className="hidden sm:inline">Home</span>
@@ -48,6 +51,38 @@ export function Header() {
               )}
             </Link>
           </Button>
+          <div className="flex items-center ml-2">
+            {isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex items-center cursor-pointer">
+                    {userImage ? (
+                      <img src={userImage} alt="User" className="w-7 h-7 rounded-full object-cover" />
+                    ) : (
+                      <User size={24} className="text-primary-foreground" />
+                    )}
+                    <span className="ml-2 text-primary-foreground hidden sm:inline">{username}</span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Go to Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+            ) : (
+              <>
+                <User size={24} className="text-primary-foreground" />
+                <Button variant="ghost" asChild className="text-primary-foreground hover:bg-primary/80 px-2 sm:px-3 ml-1">
+                  <Link href="/login" className="flex items-center gap-1">
+                    Login
+                  </Link>
+                </Button>
+              </>
+            )}
+          </div>
         </nav>
       </div>
     </header>
