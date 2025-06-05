@@ -1,3 +1,4 @@
+
 import { mockProducts } from '@/data/products';
 import type { Product } from '@/types';
 import { ProductDetailsClient } from '@/components/products/ProductDetailsClient';
@@ -11,7 +12,6 @@ interface ProductPageProps {
   };
 }
 
-// This function would typically fetch data from a database or API
 async function getProductById(id: string): Promise<Product | undefined> {
   return mockProducts.find(p => p.id === id);
 }
@@ -28,8 +28,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   if (!product) {
     return (
         <div className="text-center py-10">
-            <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-            <p className="text-muted-foreground mb-6">Sorry, we couldn't find the product you were looking for.</p>
+            <h1 className="text-xl sm:text-2xl font-bold mb-4">Product Not Found</h1>
+            <p className="text-muted-foreground mb-6 text-sm sm:text-base">Sorry, we couldn't find the product you were looking for.</p>
             <Button asChild>
                 <Link href="/">
                     <ArrowLeft size={18} className="mr-2" /> Go Back to Products

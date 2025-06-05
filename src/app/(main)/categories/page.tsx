@@ -12,7 +12,7 @@ async function getCategoriesWithCounts(): Promise<{ name: string; count: number 
 
   return Object.entries(categoryCounts)
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => a.name.localeCompare(b.name)); // Sort categories alphabetically
+    .sort((a, b) => a.name.localeCompare(b.name)); 
 }
 
 export default async function CategoriesPage() {
@@ -20,15 +20,15 @@ export default async function CategoriesPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center text-primary">Shop by Category</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-8 text-center text-primary">Shop by Category</h1>
       {categories.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {categories.map(category => (
             <CategoryCard key={category.name} categoryName={category.name} productCount={category.count} />
           ))}
         </div>
       ) : (
-        <p className="text-center text-muted-foreground text-lg">No product categories found.</p>
+        <p className="text-center text-muted-foreground text-base sm:text-lg">No product categories found.</p>
       )}
     </div>
   );

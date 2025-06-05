@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -9,9 +10,9 @@ import { useCart } from '@/context/CartContext';
 import type { Order, CustomerDetails } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/label'; // Keep Label if used directly, FormLabel is via FormField
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ArrowRight, ShoppingBag } from 'lucide-react';
 
 const checkoutSchema = z.object({
@@ -43,26 +44,25 @@ export function CheckoutForm() {
 
   const onSubmit: SubmitHandler<CheckoutFormData> = (data) => {
     const order: Order = {
-      id: new Date().getTime().toString(), // Simple order ID
+      id: new Date().getTime().toString(), 
       items: state.items,
       totalAmount: getTotalPrice(),
       customerDetails: data,
       createdAt: new Date().toISOString(),
     };
 
-    // Simulate order processing
     console.log('Order submitted:', order);
-    setLastOrder(order); // Store order details for confirmation page
-    clearCart(); // Clear the cart
+    setLastOrder(order); 
+    clearCart(); 
     router.push('/order-confirmation');
   };
 
   if (state.items.length === 0) {
     return (
       <div className="text-center py-20">
-        <ShoppingBag size={64} className="mx-auto text-muted-foreground mb-6" />
-        <h2 className="text-2xl font-semibold mb-4">Your Cart is Empty</h2>
-        <p className="text-muted-foreground mb-8">Please add items to your cart before proceeding to checkout.</p>
+        <ShoppingBag size={56} className="mx-auto text-muted-foreground mb-6" />
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Your Cart is Empty</h2>
+        <p className="text-muted-foreground mb-8 text-sm sm:text-base">Please add items to your cart before proceeding to checkout.</p>
         <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
           <Link href="/">Start Shopping</Link>
         </Button>
@@ -71,17 +71,17 @@ export function CheckoutForm() {
   }
 
   return (
-    <div className="grid md:grid-cols-3 gap-8">
+    <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
       <div className="md:col-span-2">
         <Card className="shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl text-primary">Shipping Details</CardTitle>
-            <CardDescription>Please provide your shipping information.</CardDescription>
+            <CardTitle className="text-xl sm:text-2xl text-primary">Shipping Details</CardTitle>
+            <CardDescription className="text-sm sm:text-base">Please provide your shipping information.</CardDescription>
           </CardHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <FormField control={form.control} name="name" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Full Name</FormLabel>
@@ -104,7 +104,7 @@ export function CheckoutForm() {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                   <FormField control={form.control} name="city" render={({ field }) => (
                     <FormItem>
                       <FormLabel>City</FormLabel>
@@ -128,7 +128,7 @@ export function CheckoutForm() {
                   )} />
                 </div>
               </CardContent>
-              <CardFooter className="border-t pt-6">
+              <CardFooter className="border-t pt-4 sm:pt-6 p-4 sm:p-6">
                  <Button type="submit" size="lg" className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground">
                   Place Order <ArrowRight size={18} className="ml-2" />
                 </Button>
@@ -139,20 +139,20 @@ export function CheckoutForm() {
       </div>
       <div className="md:col-span-1">
         <Card className="shadow-lg sticky top-24">
-            <CardHeader>
-                <CardTitle className="text-xl text-primary">Order Summary</CardTitle>
+            <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-lg sm:text-xl text-primary">Order Summary</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2 sm:space-y-3 p-4 sm:p-6 pt-0">
                 {state.items.map(item => (
-                    <div key={item.id} className="flex justify-between items-center text-sm">
+                    <div key={item.id} className="flex justify-between items-center text-xs sm:text-sm">
                         <div>
                             <p className="font-medium">{item.name} <span className="text-muted-foreground">x {item.quantity}</span></p>
                         </div>
                         <p>${(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                 ))}
-                <hr className="my-3"/>
-                <div className="flex justify-between font-semibold text-lg">
+                <hr className="my-2 sm:my-3"/>
+                <div className="flex justify-between font-semibold text-sm sm:text-lg">
                     <p>Total</p>
                     <p className="text-accent">${getTotalPrice().toFixed(2)}</p>
                 </div>

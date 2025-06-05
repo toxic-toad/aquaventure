@@ -12,35 +12,35 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-8 sm:py-12">
       <Card className="max-w-3xl mx-auto shadow-xl">
         <CardHeader className="text-center">
-          <Mail className="mx-auto h-12 w-12 mb-4 text-accent" />
-          <CardTitle className="text-3xl font-bold text-primary">Get In Touch</CardTitle>
-          <CardDescription className="text-lg mt-2">
+          <Mail className="mx-auto h-10 w-10 sm:h-12 sm:w-12 mb-4 text-accent" />
+          <CardTitle className="text-2xl sm:text-3xl font-bold text-primary">Get In Touch</CardTitle>
+          <CardDescription className="text-base sm:text-lg mt-2">
             We're here to help! Reach out to us with any questions or inquiries.
           </CardDescription>
         </CardHeader>
         <Separator />
-        <CardContent className="p-6 md:p-8 space-y-8">
-          <div className="grid md:grid-cols-2 gap-8">
+        <CardContent className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-primary mb-2 flex items-center">
-                  <MapPin size={24} className="mr-3 text-accent" /> Our Location
+                <h3 className="text-lg sm:text-xl font-semibold text-primary mb-2 flex items-center">
+                  <MapPin size={20} className="mr-2 sm:mr-3 text-accent" /> Our Location
                 </h3>
-                <address className="not-italic text-foreground/80 space-y-1">
-                  <p>AquaVenture Headquarters</p>
-                  <p>123 Aquatic Avenue</p>
-                  <p>Ocean City, OC 45678</p>
-                  <p>United States</p>
+                <address className="not-italic text-foreground/80 space-y-1 text-sm sm:text-base">
+                  <p>AquaVenture </p>
+                  <p>Saligrama Udupi District</p>
+                  <p>Karnataka 576022</p>
+                  <p>India</p>
                 </address>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-primary mb-2 flex items-center">
-                  <Clock size={24} className="mr-3 text-accent" /> Business Hours
+                <h3 className="text-lg sm:text-xl font-semibold text-primary mb-2 flex items-center">
+                  <Clock size={20} className="mr-2 sm:mr-3 text-accent" /> Business Hours
                 </h3>
-                <div className="text-foreground/80 space-y-1">
+                <div className="text-foreground/80 space-y-1 text-sm sm:text-base">
                   <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
                   <p>Saturday: 10:00 AM - 4:00 PM</p>
                   <p>Sunday: Closed</p>
@@ -50,31 +50,31 @@ export default function ContactPage() {
 
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-primary mb-2 flex items-center">
-                  <Phone size={24} className="mr-3 text-accent" /> Call Us
+                <h3 className="text-lg sm:text-xl font-semibold text-primary mb-2 flex items-center">
+                  <Phone size={20} className="mr-2 sm:mr-3 text-accent" /> Call Us
                 </h3>
-                <Link href="tel:+1234567890" className="text-accent hover:underline text-lg">
+                <Link href="tel:+91 6360623859" className="text-accent hover:underline text-base sm:text-lg">
                   +1 (234) 567-890
                 </Link>
-                <p className="text-sm text-muted-foreground mt-1">Our team is available during business hours.</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Our team is available during business hours.</p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-primary mb-2 flex items-center">
-                  <Mail size={24} className="mr-3 text-accent" /> Email Us
+                <h3 className="text-lg sm:text-xl font-semibold text-primary mb-2 flex items-center">
+                  <Mail size={20} className="mr-2 sm:mr-3 text-accent" /> Email Us
                 </h3>
-                <Link href="mailto:support@aquaventure.example.com" className="text-accent hover:underline text-lg">
+                <Link href="mailto:aquaventure99@gmail.com" className="text-accent hover:underline text-base sm:text-lg">
                   support@aquaventure.example.com
                 </Link>
-                <p className="text-sm text-muted-foreground mt-1">We typically respond within 24 hours.</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">We typically respond within 24 hours.</p>
               </div>
             </div>
           </div>
           
-          <Separator className="my-8" />
+          <Separator className="my-6 sm:my-8" />
 
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-primary mb-3">Have a specific question?</h3>
-            <p className="text-foreground/80 mb-6 max-w-md mx-auto">
+            <h3 className="text-lg sm:text-xl font-semibold text-primary mb-3">Have a specific question?</h3>
+            <p className="text-foreground/80 mb-6 max-w-md mx-auto text-sm sm:text-base">
               Consider checking our FAQ page or reaching out via email for detailed inquiries. For urgent matters, please call us.
             </p>
             {/* You can add a link to an FAQ page here if you have one */}
