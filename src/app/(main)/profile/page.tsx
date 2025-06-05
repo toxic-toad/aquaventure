@@ -1,3 +1,4 @@
+// src/app/(main)/profile/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,13 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { User } from 'lucide-react';
+import { User, CircleUser } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import FemaleAvatar from '@/components/ui/female-avatar';
+import MaleAvatar from '@/components/ui/male-avatar';
 
-// Define a schema for your form data
 const profileFormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -21,15 +24,16 @@ const profileFormSchema = z.object({
     message: "Please enter a valid email address.",
   }).optional().or(z.literal('')),
   phoneNumber: z.string()
-    .regex(/^\d{10}$/, { message: "Phone number must be exactly 10 digits." }) // Validate for exactly 10 digits
+    .regex(/^\d{10}$/, { message: "Phone number must be exactly 10 digits." })
     .optional().or(z.literal('')),
   userImageUrl: z.string().optional().or(z.literal('')),
+  gender: z.enum(["Male", "Female"]).optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function ProfilePage() {
-  const { isLoggedIn, username, email, phoneNumber, userImageUrl, updateProfile } = useAuth();
+  const { isLoggedIn, username, email, phoneNumber, userImageUrl, gender, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +44,8 @@ export default function ProfilePage() {
       username: username || '',
       email: email || 'sample@example.com',
       phoneNumber: phoneNumber || '0000000000',
-      userImageUrl: userImageUrl || undefined, // Correct default value
+      userImageUrl: userImageUrl || undefined,
+      gender: gender || undefined,
     },
   });
 
@@ -50,13 +55,14 @@ export default function ProfilePage() {
         username: username || '',
         email: email || 'sample@example.com',
         phoneNumber: phoneNumber || '0000000000',
-        userImageUrl: userImageUrl || undefined, // Correct default value
+        userImageUrl: userImageUrl || undefined,
+        gender: gender || undefined,
       });
     }
      if (!isLoggedIn) {
      }
      setLoading(false);
-  }, [isLoggedIn, username, email, phoneNumber, userImageUrl, loading, form]);
+  }, [isLoggedIn, username, email, phoneNumber, userImageUrl, gender, loading, form]);
 
 
   async function onSubmit(values: ProfileFormValues) {
@@ -65,9 +71,11 @@ export default function ProfilePage() {
       email: values.email || undefined,
       phoneNumber: values.phoneNumber || undefined,
       userImageUrl: values.userImageUrl || undefined,
+      gender: values.gender || undefined,
     });
     setIsEditing(false);
   }
+
 
   if (loading) {
     return <div className="container mx-auto px-4 py-8 text-center">Loading profile...</div>;
@@ -88,14 +96,18 @@ export default function ProfilePage() {
             {userImageUrl ? (
               <img src={userImageUrl} alt={`${username}'s profile`} className="w-32 h-32 rounded-full object-cover mb-4" />
             ) : (
-              <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mb-4">
-                <User size={64} />
+              <div className="w-32 h-32 rounded-full flex items-center justify-center text-gray-500 mb-4">
+                {gender === "Female" ? (
+ <FemaleAvatar width={48} height={48} />
+ ) : gender === "Male" ? (
+ <MaleAvatar width={48} height={48} />
+                ) : (
+ <User size={64} />
+                )}
               </div>
             )}
              {!isEditing && <p className="text-xl font-semibold text-foreground">{username}</p>}
           </div>
-
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {isEditing ? (
@@ -133,19 +145,60 @@ export default function ProfilePage() {
                   <FormItem>
                     <FormLabel className="text-muted-foreground">Phone Number</FormLabel>
                     <FormControl>
- <Input
- type="tel"
- placeholder="Your phone number"
- {...field}
- className="bg-background text-foreground border-border"
- inputMode="numeric" // Add inputMode
- maxLength={10} // Add maxLength
- />
+                      <Input
+                        type="tel"
+                        placeholder="Your phone number"
+                        {...field}
+                        className="bg-background text-foreground border-border"
+                        inputMode="numeric"
+                        maxLength={10}
+                        onChange={(e) => {
+                          const filteredValue = e.target.value.replace(/\D/g, '');
+                          field.onChange(filteredValue);
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Gender Field */}
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-muted-foreground">Gender</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="Male" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Male
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="Female" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Female
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
                {/* Optional: Field for user image URL if you want to allow updating it */}
                {/* <FormField
                 control={form.control}
@@ -167,7 +220,8 @@ export default function ProfilePage() {
                         username: username || '',
                         email: email || 'sample@example.com',
                         phoneNumber: phoneNumber || '0000000000',
-                        userImageUrl: userImageUrl || undefined, // Corrected default value
+                        userImageUrl: userImageUrl || undefined,
+                        gender: gender || undefined,
                      });
                 }}>
                   Cancel
@@ -182,8 +236,9 @@ export default function ProfilePage() {
             <div className="space-y-4 text-foreground">
                     <p><strong className="text-muted-foreground">Email:</strong> <span>{email || 'N/A'}</span></p>
                     <p><strong className="text-muted-foreground">Phone Number:</strong> <span>{phoneNumber || 'N/A'}</span></p>
+                    {gender && <p><strong className="text-muted-foreground">Gender:</strong> <span>{gender}</span></p>}
                     {/* Optional: Display Image URL if available */}
-                    {/* {userImageUrl && <p><strong>Image URL:</strong> {userImageUrl}</p>} */}
+                    {/* {userImageUrl && <p><strong>Image URL:</strong> <span>{userImageUrl}</span></p>} */}
                     <div className="flex justify-end">
                          <Button type="button" onClick={() => setIsEditing(true)}>Edit Profile</Button>
                     </div>

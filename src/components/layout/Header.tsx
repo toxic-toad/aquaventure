@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { useAuth } from '@/context/AuthContext';
 
+import FemaleAvatar from '@/components/ui/female-avatar';
+import MaleAvatar from '@/components/ui/male-avatar';
 export function Header() {
   const { getTotalItems } = useCart();
-  const { isLoggedIn, username, logout, userImageUrl } = useAuth();
+  const { isLoggedIn, username, logout, userImageUrl, gender } = useAuth();
 
   return (
     <header className="bg-primary text-primary-foreground shadow-md sticky top-0 z-50 w-full">
@@ -48,7 +50,11 @@ export function Header() {
                     <div className="flex items-center">
                       {/* Placeholder for user image - using User icon for now */}
                       {userImageUrl ? (
-                        <img src={userImageUrl} alt={`${username || 'User'}'s profile`} className="w-5 h-5 rounded-full object-cover" />
+ <img src={userImageUrl} alt={`${username || 'User'}'s profile`} className="w-5 h-5 rounded-full object-cover" />
+                      ) : isLoggedIn && gender === "Female" ? (
+                        <FemaleAvatar width={20} height={20} />
+                      ) : isLoggedIn && gender === "Male" ? (
+ <MaleAvatar width={20} height={20} />
                       ) : (
                         <User size={20} />
  )}

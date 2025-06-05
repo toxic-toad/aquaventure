@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
@@ -8,20 +9,22 @@ interface AuthContextType {
   email: string | null;
   phoneNumber: string | null;
   userImageUrl: string | null;
-  login: (username: string, email: string, phoneNumber: string, userImageUrl?: string) => void;
+  gender: "Male" | "Female" | null;
+  login: (username: string, email: string, phoneNumber: string, userImageUrl?: string, gender?: "Male" | "Female") => void;
   logout: () => void;
-  updateProfile: (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string }>) => void;
+  updateProfile: (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string; gender: "Male" | "Female" }>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Initialize state from localStorage on mount
+  // Initialize state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [userImageUrl, setUserImageUrl] = useState<string | null>(null);
+  const [gender, setGender] = useState<"Male" | "Female" | null>("Male"); // Set default gender to "Male"
 
   React.useEffect(() => {
     const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
@@ -29,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedEmail = localStorage.getItem('email');
     const storedPhoneNumber = localStorage.getItem('phoneNumber');
     const storedUserImageUrl = localStorage.getItem('userImageUrl');
+    const storedGender = localStorage.getItem('gender') as "Male" | "Female" | null;
 
     if (storedIsLoggedIn === 'true' && storedUsername) {
       setIsLoggedIn(true);
@@ -36,21 +40,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setEmail(storedEmail || null);
       setPhoneNumber(storedPhoneNumber || null);
       setUserImageUrl(storedUserImageUrl || null);
+      setGender(storedGender ?? "Male"); // Set gender from localStorage, default to "Male"
     }
-  }, []); // Empty dependency array means this effect runs only once on mount
+  }, []);
 
-  const login = (username: string, email: string, phoneNumber: string, userImageUrl?: string) => {
+  const login = (username: string, email: string, phoneNumber: string, userImageUrl?: string, gender?: "Male" | "Female") => {
     setIsLoggedIn(true);
     setUsername(username);
     setEmail(email);
     setPhoneNumber(phoneNumber);
     setUserImageUrl(userImageUrl || null);
+    setGender(gender ?? "Male"); // Set gender on login, default to "Male"
     // Persist to localStorage
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('username', username);
     localStorage.setItem('email', email);
     localStorage.setItem('phoneNumber', phoneNumber);
     if (userImageUrl) localStorage.setItem('userImageUrl', userImageUrl);
+    if (gender) localStorage.setItem('gender', gender);
+    else localStorage.removeItem('gender'); // Remove gender from localStorage if not provided
   };
 
   const logout = () => {
@@ -59,12 +67,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setEmail(null);
     setPhoneNumber(null);
     setUserImageUrl(null);
+    setGender(null); // Clear gender state on logout
     // Remove from localStorage
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    localStorage.removeItem('phoneNumber');
+    localStorage.removeItem('userImageUrl');
+    localStorage.removeItem('gender');
   };
 
-  const updateProfile = (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string }>) => {
+  const updateProfile = (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string; gender: "Male" | "Female" }>) => {
     if (updates.username !== undefined) {
       setUsername(updates.username);
       localStorage.setItem('username', updates.username);
@@ -82,10 +95,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (updates.userImageUrl) localStorage.setItem('userImageUrl', updates.userImageUrl);
       else localStorage.removeItem('userImageUrl');
     }
+    if (updates.gender !== undefined) {
+      setGender(updates.gender);
+      if (updates.gender) localStorage.setItem('gender', updates.gender);
+      else localStorage.removeItem('gender');
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, username, email, phoneNumber, userImageUrl, login, logout, updateProfile }}>
+    <AuthContext.Provider value={{ isLoggedIn, username, email, phoneNumber, userImageUrl, gender, login, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
