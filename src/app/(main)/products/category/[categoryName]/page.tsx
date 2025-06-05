@@ -39,7 +39,7 @@ export default async function CategoryProductsPage({ params }: CategoryProductsP
           <ArrowLeft size={18} className="mr-2" /> Back to Categories
         </Link>
       </Button>
-      <h1 className="text-3xl font-bold mb-8 text-primary">
+      <h1 className="text-2xl md:text-3xl font-bold mb-8 text-primary">
         Products in: <span className="text-accent">{categoryDisplayName}</span>
       </h1>
       {products.length > 0 ? (
@@ -50,8 +50,8 @@ export default async function CategoryProductsPage({ params }: CategoryProductsP
         </div>
       ) : (
         <div className="text-center py-10">
-          <PackageSearch size={64} className="mx-auto text-muted-foreground mb-6" />
-          <p className="text-xl text-muted-foreground">No products found in this category.</p>
+          <PackageSearch size={56} className="mx-auto text-muted-foreground mb-6" />
+          <p className="text-lg sm:text-xl text-muted-foreground">No products found in this category.</p>
         </div>
       )}
     </div>

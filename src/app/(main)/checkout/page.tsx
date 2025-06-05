@@ -1,4 +1,6 @@
+
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
+import type { Metadata } from 'next';
 
 export default function CheckoutPage() {
   return (
@@ -8,7 +10,7 @@ export default function CheckoutPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Checkout | AquaVenture',
   description: 'Complete your purchase at AquaVenture.',
 };

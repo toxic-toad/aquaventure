@@ -8,6 +8,7 @@ interface AuthContextType {
   email: string | null;
   phoneNumber: string | null;
   userImageUrl: string | null;
+  gender: string | null;
   login: (username: string, email: string, phoneNumber: string, userImageUrl?: string) => void;
   logout: () => void;
   updateProfile: (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string }>) => void;
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState<string | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [userImageUrl, setUserImageUrl] = useState<string | null>(null);
+  const [gender, setGender] = useState<string | null>(null);
 
   React.useEffect(() => {
     const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
@@ -30,12 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedPhoneNumber = localStorage.getItem('phoneNumber');
     const storedUserImageUrl = localStorage.getItem('userImageUrl');
 
+    const storedGender = localStorage.getItem('gender');
+
     if (storedIsLoggedIn === 'true' && storedUsername) {
       setIsLoggedIn(true);
       setUsername(storedUsername);
       setEmail(storedEmail || null);
       setPhoneNumber(storedPhoneNumber || null);
-      setUserImageUrl(storedUserImageUrl || null);
+      setUserImageUrl(storedUserImageUrl !== null ? storedUserImageUrl : null);
     }
   }, []); // Empty dependency array means this effect runs only once on mount
 
@@ -45,12 +49,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setEmail(email);
     setPhoneNumber(phoneNumber);
     setUserImageUrl(userImageUrl || null);
+    setGender(null); // Assuming gender is not set during login initially
     // Persist to localStorage
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('username', username);
     localStorage.setItem('email', email);
     localStorage.setItem('phoneNumber', phoneNumber);
     if (userImageUrl) localStorage.setItem('userImageUrl', userImageUrl);
+    localStorage.removeItem('gender'); // Ensure gender is not saved initially
   };
 
   const logout = () => {
@@ -59,12 +65,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setEmail(null);
     setPhoneNumber(null);
     setUserImageUrl(null);
+    setGender(null);
     // Remove from localStorage
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('username');
   };
 
-  const updateProfile = (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string }>) => {
+  const updateProfile = (updates: Partial<{ username: string; email: string; phoneNumber: string; userImageUrl: string; gender: string }>) => {
     if (updates.username !== undefined) {
       setUsername(updates.username);
       localStorage.setItem('username', updates.username);
