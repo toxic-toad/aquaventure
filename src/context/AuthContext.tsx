@@ -13,7 +13,7 @@ interface AuthContextType {
   login: (userId: string, email: string, fullName: string, phoneNumber: string, userImageUrl?: string | null, gender?: "Male" | "Female" | null) => void;
   logout: () => void;
   updateProfile: (updates: Partial<{ userId: string; fullName: string; email: string; phoneNumber: string; userImageUrl: string | null; gender: "Male" | "Female" | null }>) => void;
-  signup: (userId: string, email: string, fullName: string, password: string, phoneNumber: string, userImageUrl?: string | null, gender?: "Male" | "Female" | null) => void;
+  signup: (userId: string, email: string, fullName: string, password: string, phoneNumber: string | null | undefined, userImageUrl?: string | null, gender?: "Male" | "Female" | null) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('gender');
   };
 
-  const signup = (userId: string, email: string, fullName: string, password: string, phoneNumber: string, userImageUrl?: string | null, gender?: "Male" | "Female" | null) => {
+  const signup = async (userId: string, email: string, fullName: string, password: string, phoneNumber: string | null | undefined, userImageUrl?: string | null, gender?: "Male" | "Female" | null): Promise<void> => {
     // In a real application, you would send user data to a backend for registration,
     // and handle the password securely (hashing, etc.).
     // For this example, we'll simulate a successful signup by setting context state and localStorage.
@@ -93,8 +93,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Set all the collected data from signup to state and localStorage
     setUserId(userId);
     setEmail(email);
-    setFullName(fullName);
-    setPhoneNumber(phoneNumber);
+    setFullName(fullName); // Ensure fullName is set
+    setPhoneNumber(phoneNumber || null);
     setUserImageUrl(userImageUrl || null);
     setGender(gender ?? "Male");
 
@@ -104,9 +104,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('userId', userId);
     localStorage.setItem('fullName', fullName);
     localStorage.setItem('email', email);
-    localStorage.setItem('phoneNumber', phoneNumber);
+    // Safely set phoneNumber in localStorage, handling null or undefined
+    if (phoneNumber !== null && phoneNumber !== undefined) localStorage.setItem('phoneNumber', phoneNumber);
+    else localStorage.removeItem('phoneNumber'); // Remove if null or undefined
     if (userImageUrl !== null && userImageUrl !== undefined) localStorage.setItem('userImageUrl', userImageUrl);
-    if (gender) localStorage.setItem('gender', gender); // Only store if gender is not null
+ if (gender) {
+ localStorage.setItem('gender', gender); // Only store if gender is not null
+    } else {
+ localStorage.removeItem('gender');
+ }
+    return Promise.resolve(); // Simulate asynchronous operation
   };
  const updateProfile = (updates: Partial<{ userId: string; fullName: string; email: string; phoneNumber: string; userImageUrl: string | null; gender: "Male" | "Female" | null }>) => {
     if (updates.userId !== undefined) {
@@ -139,7 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userId, fullName, email, phoneNumber, userImageUrl, gender, login, logout, updateProfile, signup: signup as any }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId, fullName, email, phoneNumber, userImageUrl, gender, login, logout, updateProfile, signup }}>
       {children}
     </AuthContext.Provider>
   );

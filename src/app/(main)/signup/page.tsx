@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import * as z from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 import { User } from 'lucide-react'; // Using User icon for default image representation, CircleUser removed as not used
 import { CameraIcon } from 'lucide-react';
 import FemaleAvatar from '@/components/ui/female-avatar';
@@ -44,6 +45,7 @@ type SignupFormValues = z.infer<typeof signupFormSchema>;
 
 export default function SignupPage() {
   const { signup } = useAuth(); // Assuming signup function is added to AuthContext
+  const router = useRouter();
   const [isSigningUp, setIsSigningUp] = useState(false);  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
@@ -79,11 +81,23 @@ export default function SignupPage() {
 
   async function onSubmit(values: SignupFormValues) {
     setIsSigningUp(true);
-    // Placeholder for signup logic using AuthContext.signup
-    console.log("Signup values:", values);
-    // await signup(values.userId, values.email, values.name, values.password, values.userImageUrl, values.gender);
+    let userImageUrl: string | null = values.userImageUrl;
+
+    if (!selectedImage) {
+ userImageUrl = null; // Set to null if no image is selected
+    } else if (imagePreviewUrl) {
+      userImageUrl = imagePreviewUrl; // Use the data URL from image preview
+    }
+
+    try {
+      const phoneNumberArg = values.phoneNumber === '' ? null : values.phoneNumber;
+ await signup(values.userId, values.email, values.name, values.password, phoneNumberArg, userImageUrl, values.gender);
+      router.push('/'); // Redirect to home on successful signup
+    } catch (error) {
+      console.error("Signup failed:", error);
+      // Handle signup error (e.g., display error message to user)
+    }
     setIsSigningUp(false); // Set loading to false after signup attempt
-    // Add redirection or success message after signup
   }
 
   return (
