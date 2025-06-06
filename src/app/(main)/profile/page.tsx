@@ -16,8 +16,11 @@ import FemaleAvatar from '@/components/ui/female-avatar';
 import MaleAvatar from '@/components/ui/male-avatar';
 
 const profileFormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  userId: z.string().min(4, {
+    message: "User ID must be at least 4 characters.",
+  }),
+  fullName: z.string().min(1, {
+    message: "Full name cannot be blank.",
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -32,7 +35,7 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function ProfilePage() {
-  const { isLoggedIn, username, email, phoneNumber, userImageUrl, gender, updateProfile } = useAuth();
+  const { isLoggedIn, userId, fullName, email, phoneNumber, userImageUrl, gender, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -40,9 +43,10 @@ export default function ProfilePage() {
     resolver: zodResolver(profileFormSchema),
     mode: "onChange",
     defaultValues: {
-      username: username || '',
-      email: email || 'sample@example.com',
-      phoneNumber: phoneNumber || '0000000000',
+      userId: userId || '',
+      fullName: fullName || '',
+      email: email || '',
+      phoneNumber: phoneNumber || '',
       userImageUrl: userImageUrl || undefined,
       gender: gender || undefined,
     },
@@ -51,9 +55,10 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!loading && isLoggedIn) {
       form.reset({
-        username: username || '',
-        email: email || 'sample@example.com',
-        phoneNumber: phoneNumber || '0000000000',
+        userId: userId || '',
+        fullName: fullName || '',
+        email: email || '',
+        phoneNumber: phoneNumber || '',
         userImageUrl: userImageUrl || undefined,
         gender: gender || undefined,
       });
@@ -61,12 +66,13 @@ export default function ProfilePage() {
      if (!isLoggedIn) {
      }
      setLoading(false);
-  }, [isLoggedIn, username, email, phoneNumber, userImageUrl, gender, loading, form]);
+  }, [isLoggedIn, userId, fullName, email, phoneNumber, userImageUrl, gender, loading, form]);
 
 
   async function onSubmit(values: ProfileFormValues) {
     updateProfile({
-      username: values.username,
+      userId: values.userId,
+      fullName: values.fullName,
       email: values.email || undefined,
       phoneNumber: values.phoneNumber || undefined,
       userImageUrl: values.userImageUrl || undefined,
@@ -93,7 +99,7 @@ export default function ProfilePage() {
         <CardContent>
           <div className="flex flex-col items-center mb-6">
             {userImageUrl ? (
-              <img src={userImageUrl} alt={`${username}'s profile`} className="w-32 h-32 rounded-full object-cover mb-4" />
+              <img src={userImageUrl} alt={`${fullName}'s profile`} className="w-32 h-32 rounded-full object-cover mb-4" />
             ) : (
               <div className="w-32 h-32 rounded-full flex items-center justify-center text-gray-500 mb-4">
                 {gender === "Female" ? (
@@ -105,20 +111,34 @@ export default function ProfilePage() {
                 )}
               </div>
             )}
-             {!isEditing && <p className="text-xl font-semibold text-foreground">{username}</p>}
+            {!isEditing && <p className="text-2xl font-semibold text-foreground">{userId}</p>}
+            {!isEditing && <p className="text-xl font-semibold text-foreground">{fullName}</p>}
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {isEditing ? (
                 <>
-                  <FormField
+                   <FormField
                     control={form.control}
-                    name="username"
+                    name="userId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-muted-foreground">Username</FormLabel>
+                        <FormLabel className="text-muted-foreground">User ID</FormLabel>
                         <FormControl>
-                          <Input placeholder="Your username" {...field} className="bg-background text-foreground border-border" />
+                          <Input placeholder="Your User ID" {...field} className="bg-background text-foreground border-border" disabled={!!field.value}/>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-muted-foreground">Full Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Your full name" {...field} className="bg-background text-foreground border-border" disabled={!!fullName}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -216,9 +236,10 @@ export default function ProfilePage() {
                 <Button type="button" variant="outline" onClick={() => {
                      setIsEditing(false);
                      form.reset({
-                        username: username || '',
-                        email: email || 'sample@example.com',
-                        phoneNumber: phoneNumber || '0000000000',
+                        userId: userId || '',
+                        fullName: fullName || '',
+                        email: email || '',
+                        phoneNumber: phoneNumber || '',
                         userImageUrl: userImageUrl || undefined,
                         gender: gender || undefined,
                      });
@@ -233,6 +254,7 @@ export default function ProfilePage() {
           ) : (
              // Display user details when not editing
             <div className="space-y-4 text-foreground">
+                    <p><strong className="text-muted-foreground">Full Name:</strong> <span>{fullName || 'N/A'}</span></p>
                     <p><strong className="text-muted-foreground">Email:</strong> <span>{email || 'N/A'}</span></p>
                     <p><strong className="text-muted-foreground">Phone Number:</strong> <span>{phoneNumber || 'N/A'}</span></p>
                     {gender && <p><strong className="text-muted-foreground">Gender:</strong> <span>{gender}</span></p>}
